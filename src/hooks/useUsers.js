@@ -3,10 +3,18 @@ import { getUsers } from "../services/userServices";
 
 export const useUsers = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    const data = await getUsers();
+    setUsers(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    getUsers().then(setUsers);
+    fetchUsers();
   }, []);
 
-  return { users, setUsers };
+  return { users, setUsers, loading, refetch: fetchUsers };
 };

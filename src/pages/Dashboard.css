@@ -1,0 +1,65 @@
+.dashboard {
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.page-header p {
+  color: #64748b;
+  margin: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stats-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stats-icon {
+  font-size: 2.5rem;
+  background: #f1f5f9;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.stats-content h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.stats-value {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+}
