@@ -7,8 +7,6 @@ export const getUsers = async () => {
 };
 
 export const getPayments = async () => {
-  // If you have a payments collection, replace this mock.
-  // For now, returning empty array.
   const snap = await getDocs(collection(db, "payments"));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 };

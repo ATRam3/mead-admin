@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { FiPieChart, FiDatabase, FiUsers } from "react-icons/fi";
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -16,7 +17,7 @@ const Sidebar = () => {
             isActive ? "nav-link active" : "nav-link"
           }
         >
-          📊 Dashboard
+          <FiPieChart className="nav-icon" /> Dashboard
         </NavLink>
         <NavLink
           to="/meals"
@@ -24,7 +25,7 @@ const Sidebar = () => {
             isActive ? "nav-link active" : "nav-link"
           }
         >
-          🍕 Meals
+          <FiDatabase className="nav-icon" /> Meals
         </NavLink>
         <NavLink
           to="/users"
@@ -32,7 +33,7 @@ const Sidebar = () => {
             isActive ? "nav-link active" : "nav-link"
           }
         >
-          👥 Users
+          <FiUsers className="nav-icon" /> Users
         </NavLink>
       </nav>
     </aside>

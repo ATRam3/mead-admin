@@ -1,11 +1,31 @@
-import React, { useState } from "react";
-import { useUsers } from "../hooks/useUsers";
+import React, { useEffect, useState } from "react";
+import { useUsersStorage } from "../storage/useUsersStorage";
+import { FiSearch, FiRefreshCw } from "react-icons/fi";
+import { toggleProStatus } from "../services/userServices";
 import "./Users.css";
 
 const Users = () => {
-  const { users, loading } = useUsers();
+  const { users, loading, fetchUsers, refreshUsers } = useUsersStorage();
   const [searchTerm, setSearchTerm] = useState("");
   const [proFilter, setProFilter] = useState("all");
+  const [togglingUserId, setTogglingUserId] = useState(null);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const handleTogglePro = async (id, currentStatus) => {
+    setTogglingUserId(id);
+    try {
+      await toggleProStatus(id, currentStatus);
+      await refreshUsers();
+    } catch (error) {
+      console.error("Failed to toggle pro status:", error);
+      alert("Error updating user status");
+    } finally {
+      setTogglingUserId(null);
+    }
+  };
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -33,18 +53,26 @@ const Users = () => {
   return (
     <div className="users-page">
       <div className="page-header">
-        <h1>User Management</h1>
-        <p>Total: {users.length} users</p>
+        <div>
+          <h1>User Management</h1>
+          <p>Total: {users.length} users</p>
+        </div>
+        <button className="refresh-users" onClick={refreshUsers}>
+          <FiRefreshCw size={20} />
+        </button>
       </div>
 
       <div className="filters">
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
+        <div className="search-wrapper">
+          <FiSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
         <select
           value={proFilter}
           onChange={(e) => setProFilter(e.target.value)}
@@ -64,12 +92,13 @@ const Users = () => {
               <th>Email</th>
               <th>Join Date</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan="4" className="no-data">
+                <td colSpan="5" className="no-data">
                   No users found
                 </td>
               </tr>
@@ -85,6 +114,19 @@ const Users = () => {
                     >
                       {user.isPro ? "Pro" : "Regular"}
                     </span>
+                  </td>
+                  <td>
+                    <button
+                      className={`toggle-pro-btn ${user.isPro ? "pro" : "regular"}`}
+                      onClick={() => handleTogglePro(user.id, user.isPro)}
+                      disabled={togglingUserId === user.id}
+                    >
+                      {togglingUserId === user.id
+                        ? "Updating..."
+                        : user.isPro
+                          ? "Remove Pro"
+                          : "Make Pro"}
+                    </button>
                   </td>
                 </tr>
               ))

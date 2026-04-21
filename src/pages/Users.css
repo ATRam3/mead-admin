@@ -88,3 +88,88 @@
   padding: 3rem !important;
   color: #64748b;
 }
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.refresh-users {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+/* Header layout */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Toggle button styling */
+.toggle-pro-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-pro-btn.pro {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.toggle-pro-btn.pro:hover {
+  background: #fecaca;
+}
+
+.toggle-pro-btn.regular {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.toggle-pro-btn.regular:hover {
+  background: #bfdbfe;
+}
+
+.toggle-pro-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Adjust table for new column */
+.users-table th:last-child,
+.users-table td:last-child {
+  text-align: center;
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem !important;
+  color: #64748b;
+}

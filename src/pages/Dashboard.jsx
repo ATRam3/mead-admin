@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { getUsers, getPayments } from "../services/analyticsService";
-import { calculateStats } from "../utils/calculateStats";
+import React, { useEffect } from "react";
+import { useDashboardStorage } from "../storage/useDashboardStorage";
 import StatsCard from "../components/Dashboard/StatsCard";
+import {
+  FiUsers,
+  FiUserCheck,
+  FiStar,
+  FiDollarSign,
+  FiTrendingUp,
+  FiRefreshCw,
+} from "react-icons/fi";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { stats, loading, fetchStats, refreshStats } = useDashboardStorage();
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const users = await getUsers();
-        const payments = await getPayments();
-        const result = calculateStats(users, payments);
-        setStats(result);
-      } catch (error) {
-        console.error("Failed to load stats:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+    fetchStats();
+  }, [fetchStats]);
 
   if (loading) return <div className="loading">Loading dashboard...</div>;
   if (!stats) return <div className="error">Failed to load data</div>;
@@ -30,27 +24,36 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="page-header">
-        <h1>Dashboard</h1>
-        <p>Overview of your nutrition platform</p>
+        <div>
+          <h1>Dashboard</h1>
+          <p>Overview of your nutrition platform</p>
+        </div>
+        <button className="refresh-button" onClick={refreshStats}>
+          <FiRefreshCw size={24} />
+        </button>
       </div>
 
       <div className="stats-grid">
-        <StatsCard title="Total Users" value={stats.totalUsers} icon="👥" />
+        <StatsCard
+          title="Total Users"
+          value={stats.totalUsers}
+          icon={FiUsers}
+        />
         <StatsCard
           title="Active Users (30d)"
           value={stats.activeUsers}
-          icon="🟢"
+          icon={FiUserCheck}
         />
-        <StatsCard title="Pro Users" value={stats.proUsers} icon="⭐" />
+        <StatsCard title="Pro Users" value={stats.proUsers} icon={FiStar} />
         <StatsCard
           title="Total Payments"
-          value={`$${stats.totalPayments}`}
-          icon="💰"
+          value={`${stats.totalPayments} birr`}
+          icon={FiDollarSign}
         />
         <StatsCard
           title="Conversion Rate"
           value={`${stats.conversionRate}%`}
-          icon="📈"
+          icon={FiTrendingUp}
         />
       </div>
     </div>

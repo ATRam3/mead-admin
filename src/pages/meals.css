@@ -1,3 +1,23 @@
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.refresh-meal {
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refresh-meal:hover {
+  background: #f8fafc;
+  border-color: #3b82f6;
+}
+
 .meals-page {
   padding: 2rem;
 }
@@ -137,4 +157,20 @@
   height: 200px;
   font-size: 1.2rem;
   color: #64748b;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.refresh-meal {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
 }

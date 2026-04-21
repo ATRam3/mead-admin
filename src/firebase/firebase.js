@@ -1,4 +1,4 @@
-/* import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
@@ -20,4 +20,3 @@ export const db = getFirestore(app);
 
 // Optional analytics (can remove if not needed)
 export const analytics = getAnalytics(app);
- */

@@ -1,20 +1,31 @@
-import React, { useState } from "react";
-import { useMeals } from "../hooks/useMeals";
+import React, { useState, useEffect } from "react";
+import { useMealStorage } from "../storage/useMealStorage";
 import { addMeal, updateMeal, deleteMeal } from "../services/mealsService";
+import {
+  FiSearch,
+  FiTrash2,
+  FiEdit,
+  FiPlus,
+  FiRefreshCw,
+} from "react-icons/fi";
 import MealForm from "../components/Meals/MealForm";
 import "./Meals.css";
 
 const Meals = () => {
-  const { meals, loading, refetch } = useMeals();
+  const { meals, loading, refreshMeals, fetchMeals } = useMealStorage();
   const [showForm, setShowForm] = useState(false);
   const [editingMeal, setEditingMeal] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
+  useEffect(() => {
+    fetchMeals();
+  }, [fetchMeals]);
+
   const handleAdd = async (mealData) => {
     try {
       await addMeal(mealData);
-      await refetch();
+      await refreshMeals();
       setShowForm(false);
     } catch (error) {
       console.error("Failed to add meal:", error);
@@ -25,7 +36,7 @@ const Meals = () => {
   const handleUpdate = async (mealData) => {
     try {
       await updateMeal(editingMeal.id, mealData);
-      await refetch();
+      await refreshMeals();
       setEditingMeal(null);
       setShowForm(false);
     } catch (error) {
@@ -38,7 +49,7 @@ const Meals = () => {
     if (window.confirm("Are you sure you want to delete this meal?")) {
       try {
         await deleteMeal(id);
-        await refetch();
+        await refreshMeals();
       } catch (error) {
         console.error("Failed to delete meal:", error);
         alert("Error deleting meal");
@@ -72,6 +83,9 @@ const Meals = () => {
     <div className="meals-page">
       <div className="page-header">
         <h1>Food Management</h1>
+        <button className="refresh-meal" onClick={refreshMeals}>
+          <FiRefreshCw size={24} />
+        </button>
         <button
           className="btn-primary add-btn"
           onClick={() => setShowForm(true)}
@@ -81,13 +95,17 @@ const Meals = () => {
       </div>
 
       <div className="filters">
-        <input
-          type="text"
-          placeholder="Search by name (EN/AM)..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
+        <div className="search-wrapper">
+          <FiSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search by name (EN/AM)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
@@ -156,13 +174,13 @@ const Meals = () => {
                       className="action-btn edit"
                       onClick={() => openEdit(meal)}
                     >
-                      ✏️
+                      <FiEdit size={24} />
                     </button>
                     <button
                       className="action-btn delete"
                       onClick={() => handleDelete(meal.id)}
                     >
-                      🗑️
+                      <FiTrash2 size={24} />
                     </button>
                   </td>
                 </tr>
