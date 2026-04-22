@@ -1,18 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { useUsersStorage } from "../storage/useUsersStorage";
-import { FiSearch, FiRefreshCw } from "react-icons/fi";
+import {
+  FiSearch,
+  FiRefreshCw,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 import { toggleProStatus } from "../services/userServices";
 import "./Users.css";
 
 const Users = () => {
-  const { users, loading, fetchUsers, refreshUsers } = useUsersStorage();
-  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    users,
+    loading,
+    totalCount,
+    currentPage,
+    hasNextPage,
+    hasPreviousPage,
+    fetchUsers,
+    nextPage,
+    previousPage,
+    refreshUsers,
+    searchUsersAction,
+    isSearching,
+  } = useUsersStorage();
+
   const [proFilter, setProFilter] = useState("all");
   const [togglingUserId, setTogglingUserId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    searchUsersAction(value);
+  };
 
   const handleTogglePro = async (id, currentStatus) => {
     setTogglingUserId(id);
@@ -27,7 +51,8 @@ const Users = () => {
     }
   };
 
-  const filteredUsers = users.filter((user) => {
+  // Client-side filtering on the current page's data only
+  /*  const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -36,7 +61,7 @@ const Users = () => {
       (proFilter === "pro" && user.isPro) ||
       (proFilter === "regular" && !user.isPro);
     return matchesSearch && matchesPro;
-  });
+  }); */
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "N/A";
@@ -48,6 +73,8 @@ const Users = () => {
     });
   };
 
+  const totalPages = Math.ceil(totalCount / 30);
+
   if (loading) return <div className="loading">Loading users...</div>;
 
   return (
@@ -55,7 +82,9 @@ const Users = () => {
       <div className="page-header">
         <div>
           <h1>User Management</h1>
-          <p>Total: {users.length} users</p>
+          <p>
+            Total: {totalCount} users | Page {currentPage} of {totalPages || 1}
+          </p>
         </div>
         <button className="refresh-users" onClick={refreshUsers}>
           <FiRefreshCw size={20} />
@@ -69,7 +98,7 @@ const Users = () => {
             type="text"
             placeholder="Search by name or email..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             className="search-input"
           />
         </div>
@@ -96,14 +125,14 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.length === 0 ? (
+            {users.length === 0 ? (
               <tr>
                 <td colSpan="5" className="no-data">
                   No users found
                 </td>
               </tr>
             ) : (
-              filteredUsers.map((user) => (
+              users.map((user) => (
                 <tr key={user.id}>
                   <td>{user.name || "—"}</td>
                   <td>{user.email}</td>
@@ -133,6 +162,27 @@ const Users = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="pagination-controls">
+        <button
+          className="pagination-btn"
+          onClick={previousPage}
+          disabled={!hasPreviousPage || loading || isSearching}
+        >
+          <FiChevronLeft /> Previous
+        </button>
+        <span className="page-indicator">
+          Page {currentPage} of {totalPages || 1}
+        </span>
+        <button
+          className="pagination-btn"
+          onClick={nextPage}
+          disabled={!hasNextPage || loading || isSearching}
+        >
+          Next <FiChevronRight />
+        </button>
       </div>
     </div>
   );
